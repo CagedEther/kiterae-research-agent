@@ -1,0 +1,80 @@
+{
+  "identity": {
+    "agentName": "kiterae_gtm_researcher",
+    "displayName": "Kiterae GTM Researcher",
+    "description": "A two-stage GTM research agent that runs deep market analysis with Gemini 2.5 Pro, then generates an SEO strategy and messaging framework using GPT-4o-mini and DataforSEO.",
+    "version": "1.0.0",
+    "provider": {
+      "organization": "kiterae_gtm_researcher"
+    }
+  },
+  "capabilities": {
+    "taskKinds": [
+      "request"
+    ]
+  },
+  "io": {
+    "inputs": [
+      {
+        "id": "request",
+        "description": "The business idea or market topic to research (e.g. 'AI-powered legal contract review for SMBs').",
+        "contentType": "application/json",
+        "required": true,
+        "example": {
+          "topic": "AI-powered legal contract review for SMBs"
+        },
+        "schema": {
+          "type": "object",
+          "required": ["topic"],
+          "properties": {
+            "topic": {
+              "type": "string",
+              "title": "Research Topic",
+              "default": "AI-powered legal contract review for SMBs"
+            }
+          }
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "id": "full_report",
+        "description": "Combined Stage 1 + Stage 2 report as a single markdown document.",
+        "contentType": "text/markdown",
+        "guaranteed": true
+      },
+      {
+        "id": "stage1",
+        "description": "Stage 1: Deep market research from Gemini 2.5 Pro.",
+        "contentType": "text/markdown",
+        "guaranteed": false
+      },
+      {
+        "id": "stage2",
+        "description": "Stage 2: SEO strategy and messaging framework from GPT-4o-mini + DataforSEO.",
+        "contentType": "text/markdown",
+        "guaranteed": false
+      }
+    ]
+  },
+  "skills": [
+    {
+      "id": "gtm_research",
+      "name": "GTM Research",
+      "description": "Runs a two-stage GTM research pipeline: deep market analysis followed by SEO strategy and messaging framework generation.",
+      "examples": [
+        "AI-powered legal contract review for SMBs",
+        "B2B sustainable packaging marketplace",
+        "No-code data pipeline tools",
+        "Corporate mental health platforms"
+      ]
+    }
+  ],
+  "runtime": {
+    "handler": "./handler.ts",
+    "handlerExport": "default",
+    "concurrency": 3,
+    "expectedInstances": 1,
+    "maxRunningTimeSec": 300
+  }
+}

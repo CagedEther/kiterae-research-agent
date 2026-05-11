@@ -1,0 +1,141 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: research
+    description: Deep research operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /research/generate:
+    post:
+      operationId: generateResearch
+      tags: [research]
+      summary: Generate GTM research report (Stage 1 — Gemini)
+      description: Takes a topic/business idea and generates a comprehensive market research report using Gemini
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResearchInput"
+      responses:
+        "200":
+          description: Research report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /research/stage2:
+    post:
+      operationId: generateStage2
+      tags: [research]
+      summary: Generate messaging framework and SEO strategy (Stage 2 — GPT-4o-mini + DataforSEO)
+      description: Takes the Stage 1 research markdown and produces a filled messaging framework with real keyword data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Stage2Input"
+      responses:
+        "200":
+          description: Stage 2 report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResearchResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ResearchInput:
+      type: object
+      required:
+        - topic
+      properties:
+        topic:
+          type: string
+          minLength: 1
+          description: The business idea or market topic to research
+    Stage2Input:
+      type: object
+      required:
+        - topic
+        - researchMarkdown
+      properties:
+        topic:
+          type: string
+          minLength: 1
+          description: The original topic from Stage 1
+        researchMarkdown:
+          type: string
+          minLength: 1
+          description: The full markdown output from Stage 1
+    ResearchResult:
+      type: object
+      required:
+        - markdown
+        - topic
+      properties:
+        markdown:
+          type: string
+          description: The research report in markdown format
+        topic:
+          type: string
+          description: The original topic that was researched
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
