@@ -12,7 +12,8 @@
   "private": true,
   "scripts": {
     "check": "blocks check",
-    "start": "blocks run"
+    "start": "blocks run",
+    "typecheck": "tsc --noEmit --skipLibCheck --target ES2022 --module NodeNext --moduleResolution NodeNext handler.ts trigger.ts"
   },
   "type": "module",
   "version": "1.0.0"

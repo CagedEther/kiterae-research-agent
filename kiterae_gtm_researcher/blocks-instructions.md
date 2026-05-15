@@ -93,6 +93,28 @@ The agent runs as a persistent Replit workflow (`kiterae_gtm_researcher: Blocks 
 
 **Note:** The agent is self-contained — it does not call back to the Kiterae API server. All AI calls are made directly from `handler.ts`.
 
+## Updating the research methodology
+
+The research method, prompts, and report templates live in one editable file:
+
+```text
+kiterae_gtm_researcher/research-methodology.md
+```
+
+Edit that file when you want to change how the agent researches or structures its output. Keep the `METHOD:*:start` and `METHOD:*:end` markers intact because `handler.ts` reads those sections at runtime.
+
+For methodology-only updates:
+
+```bash
+cd kiterae_gtm_researcher
+npm run typecheck
+git add research-methodology.md
+git commit -m "Update GTM research methodology"
+git push
+```
+
+Railway can then redeploy from GitHub with the updated Markdown methodology.
+
 ---
 
 ## Sending a task (trigger script)
@@ -159,6 +181,7 @@ View tasks, inspect artifacts, and trigger the agent manually:
 | File | Purpose |
 |------|---------|
 | `handler.ts` | Main agent logic — runs Stage 1 and Stage 2 end-to-end |
+| `research-methodology.md` | Editable source of truth for research prompts and report templates |
 | `agent-card.json` | Agent metadata, IO schema, and runtime config |
 | `trigger.ts` | Test script to send a task and print results |
 | `.env` | Local environment variables (API keys) |

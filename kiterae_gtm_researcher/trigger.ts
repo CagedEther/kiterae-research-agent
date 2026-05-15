@@ -27,7 +27,7 @@ async function main() {
 
   session.onArtifact(async (event: ArtifactEvent) => {
     const ref = event.artifactRef;
-    console.log('[artifact] outputId:', ref.outputId, '| mimeType:', ref.mimeType);
+    console.log('[artifact] outputId:', event.outputId ?? 'unknown', '| mimeType:', ref.mimeType);
     try {
       if (ref.kind === 'inline' && ref.data) {
         const bytes = decodeInlineArtifact(ref);
